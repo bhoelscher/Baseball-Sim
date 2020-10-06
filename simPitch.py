@@ -10,15 +10,15 @@ class PitchResult:
 def simPitch():
     # strike percentage: min 48%, mean 62%, top 69%
     strike_perc = .62
-    #swing percentage at strike: min 53%, mean 65%, max 84%
+    # swing percentage at strike: min 53%, mean 65%, max 84%
     strike_swing_perc = .65
-    #swing percentage at balls: min 16%, mean 30%, max 45%
+    # swing percentage at balls: min 16%, mean 30%, max 45%
     ball_swing_perc = .30
-    #contact percentage at strike: min 72%, mean 87%, max 95%
+    # contact percentage at strike: min 72%, mean 87%, max 95%
     strike_contact_perc = .87
-    #contact percentage at balls: min 42%, mean 65%, max 80%
+    # contact percentage at balls: min 42%, mean 65%, max 80%
     ball_contact_perc = .65
-    #foul percentage: mean 50%
+    # foul percentage: mean 50%
     foul_perc = .5
 
     strike = False
