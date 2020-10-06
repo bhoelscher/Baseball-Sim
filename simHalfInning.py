@@ -1,6 +1,11 @@
 from simAtBat import simAtBat
 import constants as cn
 
+class inningResult:
+    def __init__(self, runs_scored, pitch_count, hits):
+        self.runs_Scored = runs_scored
+        self.pitch_count = pitch_count
+        self.hits = hits
 
 def simHalfInning():
     outs = 0
@@ -70,7 +75,8 @@ def simHalfInning():
             print("Walk "+ baserunner_string)
         runs_scored += runs_scored_batter
     print("Inning over, " + str(runs_scored) + " runs scored on " + str(hits) + " hits. " + str(pitch_count) + " pitches thrown")
-        
+    result = inningResult(runs_scored, pitch_count, hits)
+    return result
                 
                 
 simHalfInning()
