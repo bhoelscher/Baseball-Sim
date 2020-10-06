@@ -49,13 +49,6 @@ def simAtBat():
     fb_2b_chance = .207
     # Fly Ball 1B chance avg .172
     fb_1b_chance = .172
-    ground_ball = "GroundBall"
-    line_drive = "LineDrive"
-    fly_ball = "FlyBall"
-    single = "Single"
-    double = "Double"
-    triple = "Triple"
-    home_run = "Home Run"
     # .10516
     # .14385, .008 HR, .065 2B
     # .07245, .04 HR, .015 2B, .005 3B
