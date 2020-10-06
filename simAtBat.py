@@ -75,51 +75,44 @@ def simAtBat():
             if contact_type == cn.GROUND_BALL:
                 if ground_ball_ba > np.random.random():
                     hit = True
-                    print(cn.SINGLE)
+                    hit_type = cn.SINGLE
+                    #print(cn.SINGLE)
                 else:
                     out = True
                     out_type = cn.GROUND_OUT
-                    print("Ground out")
+                    #print("Ground out")
             elif contact_type == cn.LINE_DRIVE:
                 if line_drive_ba > np.random.random():
                     hit = True
                     ld_hit_choices = [cn.SINGLE, cn.DOUBLE, cn.HOME_RUN]
                     ld_hit_chances = [ld_1b_chance, ld_2b_chance, ld_hr_chance]
                     hit_type = np.random.choice(ld_hit_choices, p=ld_hit_chances)
-                    print(hit_type)
+                    #print(hit_type)
                 else:
                     out = True
                     out_type = cn.LINE_OUT
-                    print("Line out")
+                    #print("Line out")
             else:
                 if fly_ball_ba > np.random.random():
                     hit = True
                     fb_hit_choices = [cn.SINGLE, cn.DOUBLE, cn.TRIPLE, cn.HOME_RUN]
                     fb_hit_chances = [fb_1b_chance, fb_2b_chance, fb_3b_chance, fb_hr_chance]
                     hit_type = np.random.choice(fb_hit_choices, p=fb_hit_chances)
-                    print(hit_type)
+                    #print(hit_type)
                 else:
                     out = True
                     out_type = cn.FLY_OUT
-                    print("Fly out")
+                    #print("Fly out")
         if strikes == 3:
             outcome = True
             out = True
-            outType = cn.STRIKEOUT
-            print("Strikeout")
+            out_type = cn.STRIKEOUT
+            #print("Strikeout")
         if balls ==4:
             outcome = True
             walk = True
-            print("Walk")
-        if not outcome:
-            print(str(balls) + "-" + str(strikes))
+            #print("Walk")
+        #if not outcome:
+            #print(str(balls) + "-" + str(strikes))
     result = AtBatResult(out, hit, walk, out_type, hit_type, contact_type, pitches) 
     return result
-
-simAtBat()
-simAtBat()
-simAtBat()
-x = simAtBat()
-            
-            
-            
