@@ -1,10 +1,28 @@
 from simPitch import simPitch, PitchResult
 import numpy as np
+import constants as cn
+
+class AtBatResult:
+    def __init__(self, out, hit, walk, out_type, hit_type, contact_type, pitches):
+        self.out = out
+        self.hit = hit
+        self.walk = walk
+        self.out_type = out_type
+        self.hit_type = hit_type
+        self.contact_type = contact_type
+        self.pitches = pitches
 
 def simAtBat():
     strikes = 0
     balls = 0
+    pitches = 0
     outcome = False
+    out = False
+    hit = False
+    walk = False
+    out_type = None
+    hit_type = None
+    contact_type = None
     # Ground Ball min x, avg .44, max x
     ground_ball_perc = .44
     # Line Drive min x, avg .21, max x
@@ -43,6 +61,7 @@ def simAtBat():
     # .07245, .04 HR, .015 2B, .005 3B
     while not outcome:
         pitch = simPitch()
+        pitches += 1
         if not pitch.swing:
             if pitch.strike:
                 strikes += 1
@@ -55,42 +74,59 @@ def simAtBat():
                 strikes += 1
         else:
             outcome = True
-            contact_choices = [ground_ball, line_drive, fly_ball]
+            contact_choices = [cn.GROUND_BALL, cn.LINE_DRIVE, cn.FLY_BALL]
             contact_chances = [ground_ball_perc, line_drive_perc, fly_ball_perc]
             contact_type = np.random.choice(contact_choices, p=contact_chances)
-            print("Hit in play")
-            print(contact_type)
-            if contact_type == ground_ball:
+            #print("Hit in play")
+            #print(contact_type)
+            if contact_type == cn.GROUND_BALL:
                 if ground_ball_ba > np.random.random():
-                    print("Single")
+                    hit = True
+                    print(cn.SINGLE)
                 else:
+                    out = True
+                    out_type = cn.GROUND_OUT
                     print("Ground out")
-            elif contact_type == line_drive:
+            elif contact_type == cn.LINE_DRIVE:
                 if line_drive_ba > np.random.random():
-                    ld_hit_choices = [single, double, home_run]
+                    hit = True
+                    ld_hit_choices = [cn.SINGLE, cn.DOUBLE, cn.HOME_RUN]
                     ld_hit_chances = [ld_1b_chance, ld_2b_chance, ld_hr_chance]
-                    hit = np.random.choice(ld_hit_choices, p=ld_hit_chances)
-                    print(hit)
+                    hit_type = np.random.choice(ld_hit_choices, p=ld_hit_chances)
+                    print(hit_type)
                 else:
+                    out = True
+                    out_type = cn.LINE_OUT
                     print("Line out")
             else:
                 if fly_ball_ba > np.random.random():
-                    fb_hit_choices = [single, double, triple, home_run]
+                    hit = True
+                    fb_hit_choices = [cn.SINGLE, cn.DOUBLE, cn.TRIPLE, cn.HOME_RUN]
                     fb_hit_chances = [fb_1b_chance, fb_2b_chance, fb_3b_chance, fb_hr_chance]
-                    hit = np.random.choice(fb_hit_choices, p=fb_hit_chances)
-                    print(hit)
+                    hit_type = np.random.choice(fb_hit_choices, p=fb_hit_chances)
+                    print(hit_type)
                 else:
-                    print("Fly Ball out")
+                    out = True
+                    out_type = cn.FLY_OUT
+                    print("Fly out")
         if strikes == 3:
             outcome = True
+            out = True
+            outType = cn.STRIKEOUT
             print("Strikeout")
         if balls ==4:
             outcome = True
+            walk = True
             print("Walk")
         if not outcome:
             print(str(balls) + "-" + str(strikes))
+    result = AtBatResult(out, hit, walk, out_type, hit_type, contact_type, pitches) 
+    return result
 
 simAtBat()
+simAtBat()
+simAtBat()
+x = simAtBat()
             
             
             
