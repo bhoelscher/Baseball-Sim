@@ -3,17 +3,17 @@ import constants as cn
 
 class inningResult:
     def __init__(self, runs_scored, pitch_count, hits):
-        self.runs_Scored = runs_scored
+        self.runs_scored = runs_scored
         self.pitch_count = pitch_count
         self.hits = hits
 
-def simHalfInning():
+def simHalfInning(score):
     outs = 0
     pitch_count = 0
     runs_scored = 0
     hits = 0
     baserunners = [False, False, False]
-    while outs < 3:
+    while outs < 3 and not (score.inning >=9 and (score.home_score + runs_scored) > score.away_score and not score.top):
         runs_scored_batter = 0
         at_bat = simAtBat()
         pitch_count += at_bat.pitches
@@ -77,6 +77,3 @@ def simHalfInning():
     print("Inning over, " + str(runs_scored) + " runs scored on " + str(hits) + " hits. " + str(pitch_count) + " pitches thrown")
     result = inningResult(runs_scored, pitch_count, hits)
     return result
-                
-                
-simHalfInning()
