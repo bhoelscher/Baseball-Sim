@@ -1,5 +1,7 @@
 from simAtBat import simAtBat
+from random import random
 import constants as cn
+import time
 
 class inningResult:
     def __init__(self, runs_scored, pitch_count, hits):
@@ -40,14 +42,42 @@ def simHalfInning(score):
                 if baserunners[cn.SECOND_BASE]:
                     runs_scored_batter += 1
                 if baserunners[cn.FIRST_BASE]:
-                    baserunners[cn.THIRD_BASE] = True
-                    baserunners[cn.FIRST_BASE] = False
+                    # 43.3% average chance to score from first
+                    score_chance = 0.433
+                    if score_chance > random():
+                        runs_scored_batter += 1
+                        baserunners[cn.FIRST_BASE] = False
+                    else:
+                        baserunners[cn.THIRD_BASE] = True
+                        baserunners[cn.FIRST_BASE] = False
                 baserunners[cn.SECOND_BASE] = True
             elif at_bat.hit_type == cn.SINGLE:
                 if baserunners[cn.THIRD_BASE]:
                     runs_scored_batter += 1
-                baserunners[cn.THIRD_BASE] = baserunners[cn.SECOND_BASE]
-                baserunners[cn.SECOND_BASE] = baserunners[cn.FIRST_BASE]
+                    baserunners[cn.THIRD_BASE] = False
+                if baserunners[cn.SECOND_BASE]:
+                    # 58.8% average chance to score from second
+                    score_chance = 0.588
+                    if score_chance > random():
+                        runs_scored_batter += 1
+                        baserunners[cn.SECOND_BASE] = False
+                        if baserunners[cn.FIRST_BASE]:
+                            # 70% average chance to advance to third if runner scores from second
+                            advance_to_third_chance = 0.7
+                            if advance_to_third_chance > random():
+                                baserunners[cn.THIRD_BASE] = True
+                            else:
+                                baserunners[cn.SECOND_BASE] = True
+                    else:
+                        baserunners[cn.THIRD_BASE] = True
+                        baserunners[cn.SECOND_BASE] = baserunners[cn.FIRST_BASE]
+                elif baserunners[cn.FIRST_BASE]:
+                    # 21.1% average chance to advance to third with no runner on second
+                    advance_to_third_chance = .211
+                    if advance_to_third_chance > random():
+                        baserunners[cn.THIRD_BASE] = True
+                    else:
+                        baserunners[cn.SECOND_BASE] = True
                 baserunners[cn.FIRST_BASE] = True
             baserunner_string = "runners on: "
             if baserunners[cn.FIRST_BASE]:
@@ -74,6 +104,7 @@ def simHalfInning(score):
                 baserunner_string += "third "
             print("Walk "+ baserunner_string)
         runs_scored += runs_scored_batter
+        time.sleep(1)
     print("Inning over, " + str(runs_scored) + " runs scored on " + str(hits) + " hits. " + str(pitch_count) + " pitches thrown")
     result = inningResult(runs_scored, pitch_count, hits)
     return result
