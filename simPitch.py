@@ -7,7 +7,7 @@ class PitchResult:
         self.contact = contact
         self.foul = foul
 
-def simPitch():
+def simPitch(batter, pitcher):
     # strike percentage: min 48%, mean 62%, top 69%
     strike_perc = .62
     # swing percentage at strike: min 53%, mean 65%, max 84%

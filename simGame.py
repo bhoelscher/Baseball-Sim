@@ -1,15 +1,36 @@
 from simHalfInning import simHalfInning
 
-class currentScore:
+class CurrentScore:
     def __init__(self, away_score, home_score, inning, top):
         self.away_score = away_score
         self.home_score = home_score
         self.inning = inning
         self.top = top
 
-def simGame():
-    away_team = "Chicago"
-    home_team = "New York"
+class Team:
+    def __init__(self, name, batters, pitcher):
+        self.name = name
+        self.batters = batters
+        self.pitcher = pitcher
+        self.next_hitter = 0
+
+class Batter:
+    def __init__(self, name, contact, power, speed, vision):
+        self.name = name
+        self.contact = contact
+        self.power = power
+        self.speed = speed
+        self.vision = vision
+
+class Pitcher:
+    def __init__(self, name, control, velocity, movement, stamina):
+        self.name = name
+        self.control = control
+        self.velocity = velocity
+        self.movement = movement
+        self.stamina = stamina
+
+def simGame(away_team, home_team):
     away_score = 0
     home_score = 0
     away_hits = 0
@@ -18,28 +39,49 @@ def simGame():
     home_pitches = 0
     inning = 1
     top = True
-
+ 
     while inning <= 9 or away_score == home_score:
         top = True
-        print("Top of inning " + str(inning))
-        score = currentScore(away_score, home_score, inning, top)
-        top_half_result = simHalfInning(score)
+        #print("Top of inning " + str(inning))
+        score = CurrentScore(away_score, home_score, inning, top)
+        top_half_result = simHalfInning(score, away_team.batters, away_team.next_hitter, home_team.pitcher)
         away_score += top_half_result.runs_scored
         away_hits += top_half_result.hits
         home_pitches += top_half_result.pitch_count
-        print(away_team + ": " + str(away_score) + ", " + home_team + ": " + str(home_score))
+        away_team.next_hitter = top_half_result.next_hitter
+        #print(away_team + ": " + str(away_score) + ", " + home_team + ": " + str(home_score))
         if inning != 9 or home_score <= away_score:
             top = False
-            print("Bottom of inning " + str(inning))
-            score = currentScore(away_score, home_score, inning, top)
-            bottom_half_result = simHalfInning(score)
+            #print("Bottom of inning " + str(inning))
+            score = CurrentScore(away_score, home_score, inning, top)
+            bottom_half_result = simHalfInning(score, home_team.batters, home_team.next_hitter, away_team.pitcher)
             home_score += bottom_half_result.runs_scored
             home_hits += bottom_half_result.hits
             away_pitches += bottom_half_result.pitch_count
-            print(away_team + ": " + str(away_score) + ", " + home_team + ": " + str(home_score))
+            home_team.next_hitter = bottom_half_result.next_hitter
+            #print(away_team + ": " + str(away_score) + ", " + home_team + ": " + str(home_score))
         inning += 1
-    print("Final Score: " + away_team + ": " + str(away_score) + ", " + home_team + ": " + str(home_score))
-    print(away_team + ": " + str(away_hits) + " hits and " + str(away_pitches) + " pitches")
-    print(home_team + ": " + str(home_hits) + " hits and " + str(home_pitches) + " pitches")
+    print("Final Score: " + away_team.name + ": " + str(away_score) + ", " + home_team.name + ": " + str(home_score))
+    print(away_team.name + ": " + str(away_hits) + " hits and " + str(away_pitches) + " pitches")
+    print(home_team.name + ": " + str(home_hits) + " hits and " + str(home_pitches) + " pitches")
 
-simGame()
+batter1 = Batter("Ted", 70, 70, 70, 70)
+batter2 = Batter("Gregory", 80, 50, 80, 80)
+batter3 = Batter("Melvin", 50, 90, 60, 70)
+batter4 = Batter("Tim", 50, 50, 50, 50)
+batter5 = Batter("Nick", 90, 90, 90, 90)
+batter6 = Batter("Pat", 65, 80, 75, 80)
+batter7 = Batter("Mark", 85, 70, 65, 80)
+batter8 = Batter("Roberto", 60, 50, 70, 50)
+batter9 = Batter("Diego", 75, 40, 70, 80)
+
+pitcher1 = Pitcher("Carlos", 90, 70, 40, 70)
+pitcher2 = Pitcher("Marco", 70, 80, 90, 70)
+
+lineup = [batter1, batter2, batter3, batter4, batter5, batter6, batter7, batter8, batter9]
+
+home_team = Team("Chicago", lineup, pitcher1)
+away_team = Team("New York", lineup, pitcher2)
+
+simGame(home_team, away_team)
+

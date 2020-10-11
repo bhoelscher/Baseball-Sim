@@ -12,7 +12,7 @@ class AtBatResult:
         self.contact_type = contact_type
         self.pitches = pitches
 
-def simAtBat():
+def simAtBat(batter, pitcher):
     strikes = 0
     balls = 0
     pitches = 0
@@ -53,7 +53,7 @@ def simAtBat():
     # .14385, .008 HR, .065 2B
     # .07245, .04 HR, .015 2B, .005 3B
     while not outcome:
-        pitch = simPitch()
+        pitch = simPitch(batter, pitcher)
         pitches += 1
         if not pitch.swing:
             if pitch.strike:
