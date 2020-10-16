@@ -8,10 +8,16 @@ class CurrentScore:
         self.top = top
 
 class Team:
-    def __init__(self, name, batters, pitcher):
+    def __init__(self, teamID, name, batters, pitcher):
+        self.teamID = teamID
         self.name = name
         self.batters = batters
         self.pitcher = pitcher
+        self.next_hitter = 0
+
+    def __init__(self, teamID, name):
+        self.teamID = teamID
+        self.name = name
         self.next_hitter = 0
 
 class HittingGameStats:
@@ -42,6 +48,10 @@ class Batter:
         self.vision = vision
         self.stats = HittingGameStats()
 
+    def __init__(self, name):
+        self.name = name
+        self.stats = HittingGameStats()
+
 class Pitcher:
     def __init__(self, name, control, velocity, movement, stamina):
         self.name = name
@@ -52,9 +62,12 @@ class Pitcher:
         self.stats = PitchingGameStats()
 
 class GameResult:
-    def __init__(self, home_team, away_team):
+    def __init__(self, home_team, away_team, home_score, away_score, innings):
         self.home_team = home_team
         self.away_team = away_team
+        self.home_score = home_score
+        self.away_score = away_score
+        self.innings = innings
 
 def simGame(away_team, home_team):
     away_score = 0
@@ -94,37 +107,37 @@ def simGame(away_team, home_team):
     print("Final Score: " + away_team.name + ": " + str(away_score) + ", " + home_team.name + ": " + str(home_score))
     print(away_team.name + ": " + str(away_hits) + " hits and " + str(away_pitches) + " pitches")
     print(home_team.name + ": " + str(home_hits) + " hits and " + str(home_pitches) + " pitches")
-    result = GameResult(home_team, away_team)
+    result = GameResult(home_team, away_team, home_score, away_score, inning)
     return result
 
-batter1 = Batter("Ted", 70, 70, 70, 70)
-batter2 = Batter("Gregory", 80, 50, 80, 80)
-batter3 = Batter("Melvin", 50, 90, 60, 70)
-batter4 = Batter("Tim", 50, 50, 50, 50)
-batter5 = Batter("Nick", 90, 90, 90, 90)
-batter6 = Batter("Pat", 65, 80, 75, 80)
-batter7 = Batter("Mark", 85, 70, 65, 80)
-batter8 = Batter("Roberto", 60, 50, 70, 50)
-batter9 = Batter("Diego", 75, 40, 70, 80)
-
-batterh1 = Batter("Ted", 70, 70, 70, 70)
-batterh2 = Batter("Gregory", 80, 50, 80, 80)
-batterh3 = Batter("Melvin", 50, 90, 60, 70)
-batterh4 = Batter("Tim", 50, 50, 50, 50)
-batterh5 = Batter("Nick", 90, 90, 90, 90)
-batterh6 = Batter("Pat", 65, 80, 75, 80)
-batterh7 = Batter("Mark", 85, 70, 65, 80)
-batterh8 = Batter("Roberto", 60, 50, 70, 50)
-batterh9 = Batter("Diego", 75, 40, 70, 80)
-
-pitcher1 = Pitcher("Carlos", 90, 70, 40, 70)
-pitcher2 = Pitcher("Marco", 70, 80, 90, 70)
-
-lineup = [batter1, batter2, batter3, batter4, batter5, batter6, batter7, batter8, batter9]
-lineup2 = [batterh1, batterh2, batterh3, batterh4, batterh5, batterh6, batterh7, batterh8, batterh9]
-
-home_team = Team("Chicago", lineup, pitcher1)
-away_team = Team("New York", lineup2, pitcher2)
-
-x = simGame(home_team, away_team)
+##batter1 = Batter("Ted", 70, 70, 70, 70)
+##batter2 = Batter("Gregory", 80, 50, 80, 80)
+##batter3 = Batter("Melvin", 50, 90, 60, 70)
+##batter4 = Batter("Tim", 50, 50, 50, 50)
+##batter5 = Batter("Nick", 90, 90, 90, 90)
+##batter6 = Batter("Pat", 65, 80, 75, 80)
+##batter7 = Batter("Mark", 85, 70, 65, 80)
+##batter8 = Batter("Roberto", 60, 50, 70, 50)
+##batter9 = Batter("Diego", 75, 40, 70, 80)
+##
+##batterh1 = Batter("Ted", 70, 70, 70, 70)
+##batterh2 = Batter("Gregory", 80, 50, 80, 80)
+##batterh3 = Batter("Melvin", 50, 90, 60, 70)
+##batterh4 = Batter("Tim", 50, 50, 50, 50)
+##batterh5 = Batter("Nick", 90, 90, 90, 90)
+##batterh6 = Batter("Pat", 65, 80, 75, 80)
+##batterh7 = Batter("Mark", 85, 70, 65, 80)
+##batterh8 = Batter("Roberto", 60, 50, 70, 50)
+##batterh9 = Batter("Diego", 75, 40, 70, 80)
+##
+##pitcher1 = Pitcher("Carlos", 90, 70, 40, 70)
+##pitcher2 = Pitcher("Marco", 70, 80, 90, 70)
+##
+##lineup = [batter1, batter2, batter3, batter4, batter5, batter6, batter7, batter8, batter9]
+##lineup2 = [batterh1, batterh2, batterh3, batterh4, batterh5, batterh6, batterh7, batterh8, batterh9]
+##
+##home_team = Team(1, "Chicago", lineup, pitcher1)
+##away_team = Team(2, "New York", lineup2, pitcher2)
+##
+##x = simGame(home_team, away_team)
 
