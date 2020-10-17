@@ -16,12 +16,12 @@ def getTeam(teamID):
 def getBatters(teamID):
     mydb = getConnection()
     cursor = mydb.cursor()
-    getBattersQuery = 'SELECT playerName FROM baseball_test.players where teamID = %s'
+    getBattersQuery = 'SELECT playerID, playerName FROM baseball_test.players where teamID = %s'
     cursor.execute(getBattersQuery, (str(teamID),))
     batterRows = cursor.fetchall()
     batters = []
     for x in batterRows:
-        batter = Batter(x[0])
+        batter = Batter(x[0], x[1])
         batters.append(batter)
     cursor.close()
     mydb.close()
@@ -51,12 +51,24 @@ def logGameResult(gameID, awayTeamID, homeTeamID, gameResult):
     mydb.commit()
     cursor.close()
     mydb.close()
+
+def logHittingStats(gameID, teamID, team):
+    mydb = getConnection()
+    cursor = mydb.cursor()
+    for player in team.batters:
+        insertQuery = "INSERT INTO baseball_test.hitting_stats (PlayerID,TeamID,GameID,AtBats,Hits,Runs,RBIs,Walks,Strikeouts,Doubles,Triples,HomeRuns) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
+        parameters = (player.player_id, teamID, gameID, player.stats.at_bats, player.stats.hits, player.stats.runs, player.stats.rbis, player.stats.walks, player.stats.strikeouts, player.stats.doubles, player.stats.triples, player.stats.home_runs)
+        cursor.execute(insertQuery, parameters)
+    mydb.commit()
+    cursor.close()
+    mydb.close()
     
 
 
 def runGame():
 
     nextGame = getNextGame()
+    gameID = nextGame[0]
     awayTeamID = nextGame[1]
     homeTeamID = nextGame[2]
 
@@ -70,7 +82,10 @@ def runGame():
     homeTeam.batters = getBatters(homeTeamID)
 
     gameResult = simGame(awayTeam, homeTeam)
-    logGameResult(nextGame[0], awayTeamID, homeTeamID, gameResult)
+    logGameResult(gameID, awayTeamID, homeTeamID, gameResult)
+
+    logHittingStats(gameID, awayTeamID, gameResult.away_team)
+    logHittingStats(gameID, homeTeamID, gameResult.home_team)
 
     
 

@@ -48,7 +48,8 @@ class Batter:
         self.vision = vision
         self.stats = HittingGameStats()
 
-    def __init__(self, name):
+    def __init__(self, player_id, name):
+        self.player_id = player_id
         self.name = name
         self.stats = HittingGameStats()
 
@@ -76,10 +77,11 @@ def simGame(away_team, home_team):
     home_hits = 0
     away_pitches = 0
     home_pitches = 0
-    inning = 1
+    inning = 0
     top = True
  
-    while inning <= 9 or away_score == home_score:
+    while inning < 9 or away_score == home_score:
+        inning += 1
         top = True
         #print("Top of inning " + str(inning))
         score = CurrentScore(away_score, home_score, inning, top)
@@ -103,7 +105,6 @@ def simGame(away_team, home_team):
             home_team.batters = bottom_half_result.lineup
             away_team.pitcher = bottom_half_result.pitcher
             #print(away_team + ": " + str(away_score) + ", " + home_team + ": " + str(home_score))
-        inning += 1
     print("Final Score: " + away_team.name + ": " + str(away_score) + ", " + home_team.name + ": " + str(home_score))
     print(away_team.name + ": " + str(away_hits) + " hits and " + str(away_pitches) + " pitches")
     print(home_team.name + ": " + str(home_hits) + " hits and " + str(home_pitches) + " pitches")
