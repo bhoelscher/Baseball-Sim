@@ -4,10 +4,14 @@ CREATE TABLE `teams` (
   PRIMARY KEY (`teamID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `players` (
+CREATE TABLE `batters` (
   `playerID` int NOT NULL AUTO_INCREMENT,
   `playerName` varchar(45) DEFAULT NULL,
   `teamID` int DEFAULT NULL,
+  `contact` int DEFAULT '0',
+  `power` int DEFAULT '0',
+  `speed` int DEFAULT '0',
+  `vision` int DEFAULT '0',
   PRIMARY KEY (`playerID`),
   KEY `teams_idx` (`teamID`),
   CONSTRAINT `teams` FOREIGN KEY (`teamID`) REFERENCES `teams` (`teamID`)
@@ -32,3 +36,24 @@ CREATE TABLE `schedule` (
   CONSTRAINT `loser` FOREIGN KEY (`losingTeamID`) REFERENCES `teams` (`teamID`),
   CONSTRAINT `winner` FOREIGN KEY (`winningTeamID`) REFERENCES `teams` (`teamID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `hitting_stats` (
+  `PlayerID` int NOT NULL,
+  `TeamID` int NOT NULL,
+  `GameID` int NOT NULL,
+  `AtBats` int DEFAULT NULL,
+  `Hits` int DEFAULT NULL,
+  `Runs` int DEFAULT NULL,
+  `RBIs` int DEFAULT NULL,
+  `Walks` int DEFAULT NULL,
+  `Strikeouts` int DEFAULT NULL,
+  `Doubles` int DEFAULT NULL,
+  `Triples` int DEFAULT NULL,
+  `HomeRuns` int DEFAULT NULL,
+  PRIMARY KEY (`PlayerID`,`TeamID`,`GameID`),
+  KEY `team_idx` (`TeamID`),
+  KEY `game_idx` (`GameID`),
+  CONSTRAINT `game` FOREIGN KEY (`GameID`) REFERENCES `schedule` (`gameID`),
+  CONSTRAINT `player` FOREIGN KEY (`PlayerID`) REFERENCES `batters` (`playerID`),
+  CONSTRAINT `team` FOREIGN KEY (`TeamID`) REFERENCES `teams` (`teamID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
