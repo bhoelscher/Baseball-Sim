@@ -1,5 +1,5 @@
 from dbConnection import getConnection
-from simGame import Batter, Team
+from simGame import Batter, Team,  Pitcher
 import mysql.connector
 
 class Repository:
@@ -25,6 +25,15 @@ class Repository:
             batters.append(batter)
         cursor.close()
         return batters
+
+    def getPitcher(self, teamID):
+        cursor = self.mydb.cursor()
+        getPitcherQuery = 'SELECT pitcherID, playerName, control, velocity, movement, stamina FROM baseball_test.pitchers where teamID = %s limit 1'
+        cursor.execute(getPitcherQuery, (str(teamID),))
+        pitcherRow = cursor.fetchone()
+        pitcher = Pitcher(pitcherRow[0], pitcherRow[1], pitcherRow[2], pitcherRow[3], pitcherRow[4], pitcherRow[5])
+        cursor.close()
+        return pitcher
 
     def getNextGame(self):
         cursor = self.mydb.cursor()
@@ -53,5 +62,13 @@ class Repository:
             insertQuery = "INSERT INTO baseball_test.hitting_stats (PlayerID,TeamID,GameID,AtBats,Hits,Runs,RBIs,Walks,Strikeouts,Doubles,Triples,HomeRuns) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
             parameters = (player.player_id, teamID, gameID, player.stats.at_bats, player.stats.hits, player.stats.runs, player.stats.rbis, player.stats.walks, player.stats.strikeouts, player.stats.doubles, player.stats.triples, player.stats.home_runs)
             cursor.execute(insertQuery, parameters)
+        self.mydb.commit()
+        cursor.close()
+
+    def logPitchingStats(self, gameID, teamID, pitcher):
+        cursor = self.mydb.cursor()
+        insertQuery = "INSERT INTO `baseball_test`.`pitching_stats` (`PlayerID`,`TeamID`,`GameID`,`Innings`,`EarnedRuns`,`Hits`,`Strikeouts`,`Walks`,`Pitches`) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s);"
+        parameters = (pitcher.player_id, teamID, gameID, pitcher.stats.inningsPitched(), pitcher.stats.earned_runs, pitcher.stats.hits, pitcher.stats.strikeouts, pitcher.stats.walks, pitcher.stats.pitches)
+        cursor.execute(insertQuery, parameters)
         self.mydb.commit()
         cursor.close()

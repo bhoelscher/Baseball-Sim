@@ -32,6 +32,11 @@ class PitchingGameStats:
     walks = 0
     pitches = 0
 
+    def inningsPitched(self):
+        innings = self.outs//3
+        innings += (self.outs%3 / 10)
+        return innings
+
 class Batter:
     def __init__(self, player_id, name, contact, power, speed, vision):
         self.player_id = player_id
@@ -43,7 +48,8 @@ class Batter:
         self.stats = HittingGameStats()
 
 class Pitcher:
-    def __init__(self, name, control, velocity, movement, stamina):
+    def __init__(self, player_id, name, control, velocity, movement, stamina):
+        self.player_id = player_id
         self.name = name
         self.control = control
         self.velocity = velocity
@@ -99,35 +105,3 @@ def simGame(away_team, home_team):
     print(home_team.name + ": " + str(home_hits) + " hits and " + str(home_pitches) + " pitches")
     result = GameResult(home_team, away_team, home_score, away_score, inning)
     return result
-
-##batter1 = Batter("Ted", 70, 70, 70, 70)
-##batter2 = Batter("Gregory", 80, 50, 80, 80)
-##batter3 = Batter("Melvin", 50, 90, 60, 70)
-##batter4 = Batter("Tim", 50, 50, 50, 50)
-##batter5 = Batter("Nick", 90, 90, 90, 90)
-##batter6 = Batter("Pat", 65, 80, 75, 80)
-##batter7 = Batter("Mark", 85, 70, 65, 80)
-##batter8 = Batter("Roberto", 60, 50, 70, 50)
-##batter9 = Batter("Diego", 75, 40, 70, 80)
-##
-##batterh1 = Batter("Ted", 70, 70, 70, 70)
-##batterh2 = Batter("Gregory", 80, 50, 80, 80)
-##batterh3 = Batter("Melvin", 50, 90, 60, 70)
-##batterh4 = Batter("Tim", 50, 50, 50, 50)
-##batterh5 = Batter("Nick", 90, 90, 90, 90)
-##batterh6 = Batter("Pat", 65, 80, 75, 80)
-##batterh7 = Batter("Mark", 85, 70, 65, 80)
-##batterh8 = Batter("Roberto", 60, 50, 70, 50)
-##batterh9 = Batter("Diego", 75, 40, 70, 80)
-##
-##pitcher1 = Pitcher("Carlos", 90, 70, 40, 70)
-##pitcher2 = Pitcher("Marco", 70, 80, 90, 70)
-##
-##lineup = [batter1, batter2, batter3, batter4, batter5, batter6, batter7, batter8, batter9]
-##lineup2 = [batterh1, batterh2, batterh3, batterh4, batterh5, batterh6, batterh7, batterh8, batterh9]
-##
-##home_team = Team(1, "Chicago", lineup, pitcher1)
-##away_team = Team(2, "New York", lineup2, pitcher2)
-##
-##x = simGame(home_team, away_team)
-

@@ -17,6 +17,19 @@ CREATE TABLE `batters` (
   CONSTRAINT `teams` FOREIGN KEY (`teamID`) REFERENCES `teams` (`teamID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE `pitchers` (
+  `pitcherID` int NOT NULL AUTO_INCREMENT,
+  `playerName` varchar(45) DEFAULT NULL,
+  `teamID` int DEFAULT NULL,
+  `control` int DEFAULT '0',
+  `velocity` int DEFAULT '0',
+  `movement` int DEFAULT '0',
+  `stamina` int DEFAULT '0',
+  PRIMARY KEY (`pitcherID`),
+  KEY `teams_idx` (`teamID`),
+  CONSTRAINT `pitcherteams` FOREIGN KEY (`teamID`) REFERENCES `teams` (`teamID`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 CREATE TABLE `schedule` (
   `gameID` int NOT NULL AUTO_INCREMENT,
   `awayTeamID` int DEFAULT NULL,
@@ -56,4 +69,22 @@ CREATE TABLE `hitting_stats` (
   CONSTRAINT `game` FOREIGN KEY (`GameID`) REFERENCES `schedule` (`gameID`),
   CONSTRAINT `player` FOREIGN KEY (`PlayerID`) REFERENCES `batters` (`playerID`),
   CONSTRAINT `team` FOREIGN KEY (`TeamID`) REFERENCES `teams` (`teamID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `pitching_stats` (
+  `PlayerID` int NOT NULL,
+  `TeamID` int NOT NULL,
+  `GameID` int NOT NULL,
+  `Innings` float DEFAULT NULL,
+  `EarnedRuns` int DEFAULT NULL,
+  `Hits` int DEFAULT NULL,
+  `Strikeouts` int DEFAULT NULL,
+  `Walks` int DEFAULT NULL,
+  `Pitches` int DEFAULT NULL,
+  PRIMARY KEY (`PlayerID`,`TeamID`,`GameID`),
+  KEY `gameP_idx` (`GameID`),
+  KEY `teamP_idx` (`TeamID`),
+  CONSTRAINT `gameP` FOREIGN KEY (`GameID`) REFERENCES `schedule` (`gameID`),
+  CONSTRAINT `playerP` FOREIGN KEY (`PlayerID`) REFERENCES `pitchers` (`pitcherID`),
+  CONSTRAINT `teamP` FOREIGN KEY (`TeamID`) REFERENCES `teams` (`teamID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

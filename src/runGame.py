@@ -15,8 +15,8 @@ def runGame():
     awayTeam = repository.getTeam(awayTeamID)
     homeTeam = repository.getTeam(homeTeamID)
 
-    awayTeam.pitcher = Pitcher("Carlos", 90, 70, 40, 70)
-    homeTeam.pitcher = Pitcher("Marco", 70, 80, 90, 70)
+    awayTeam.pitcher = repository.getPitcher(awayTeamID)
+    homeTeam.pitcher = repository.getPitcher(homeTeamID)
 
     awayTeam.batters = repository.getBatters(awayTeamID)
     homeTeam.batters = repository.getBatters(homeTeamID)
@@ -26,6 +26,9 @@ def runGame():
 
     repository.logHittingStats(gameID, awayTeamID, gameResult.away_team)
     repository.logHittingStats(gameID, homeTeamID, gameResult.home_team)
+
+    repository.logPitchingStats(gameID, awayTeamID, gameResult.away_team.pitcher)
+    repository.logPitchingStats(gameID, homeTeamID, gameResult.home_team.pitcher)
 
     
 
