@@ -16,12 +16,12 @@ class Repository:
 
     def getBatters(self, teamID):
         cursor = self.mydb.cursor()
-        getBattersQuery = 'SELECT playerID, playerName FROM baseball_test.batters where teamID = %s'
+        getBattersQuery = 'SELECT playerID, playerName, contact, power, speed, vision FROM baseball_test.batters where teamID = %s'
         cursor.execute(getBattersQuery, (str(teamID),))
         batterRows = cursor.fetchall()
         batters = []
         for x in batterRows:
-            batter = Batter(x[0], x[1])
+            batter = Batter(x[0], x[1], x[2], x[3], x[4], x[5])
             batters.append(batter)
         cursor.close()
         return batters

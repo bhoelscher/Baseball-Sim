@@ -16,11 +16,16 @@ def simPitch(batter, pitcher):
     strike_swing_perc = strike_swing_perc_batter + pitcher_mod
     # swing percentage at balls: min 16%, mean 30%, max 45%
     ball_swing_perc_batter = .45 - .00737*batter.vision + .000145*(batter.vision**2) - .000000999*(batter.vision**3)
-    pitcher_mod = -0.15 + .00739*pitcher.movement - .000159*(pitcher.movement**2) - .0000012*(pitcher.movemnt**3)
+    pitcher_mod = -0.15 + .00739*pitcher.movement - .000159*(pitcher.movement**2) - .0000012*(pitcher.movement**3)
+    ball_swing_perc = ball_swing_perc_batter + pitcher_mod
     # contact percentage at strike: min 72%, mean 87%, max 95%
-    strike_contact_perc = .87
+    strike_contact_perc_batter = .639 + .00946*batter.contact - .000148*(batter.contact**2) + .000000863*(batter.vision**3)
+    velocity_mod = 0.1 - .00504*pitcher.velocity + .000102*(pitcher.velocity**2) - .000000712*(pitcher.velocity**3)
+    movement_mod = 0.06 - .00153*pitcher.movement + .0000242*(pitcher.movement**2) - .000000209*(pitcher.movement**3)
+    strike_contact_perc = strike_contact_perc_batter + velocity_mod + movement_mod
     # contact percentage at balls: min 42%, mean 65%, max 80%
-    ball_contact_perc = .65
+    ball_contact_perc_batter = .42 + .0111*batter.contact - .000218*(batter.contact**2) + .00000151*(batter.contact**3)
+    ball_contact_perc = ball_contact_perc_batter + velocity_mod + movement_mod
     # foul percentage: mean 50%
     foul_perc = .5
 
@@ -47,23 +52,6 @@ def simPitch(batter, pitcher):
 
     if contact:
         foul = foul_perc > random()
-
-##    if strike:
-##        print("Strike")
-##    else:
-##        print("Ball")
-##    if swing:
-##        print("Swing")
-##        if contact:
-##            print("Hit")
-##            if foul:
-##                print("Foul")
-##            else:
-##                print("In play")
-##        else:
-##            print("Miss")
-##    else:
-##        print("Take")
 
     result = PitchResult(strike, swing, contact, foul)
     return result

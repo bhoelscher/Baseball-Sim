@@ -8,14 +8,7 @@ class CurrentScore:
         self.top = top
 
 class Team:
-    def __init__(self, teamID, name, batters, pitcher):
-        self.teamID = teamID
-        self.name = name
-        self.batters = batters
-        self.pitcher = pitcher
-        self.next_hitter = 0
-
-    def __init__(self, teamID, name):
+   def __init__(self, teamID, name):
         self.teamID = teamID
         self.name = name
         self.next_hitter = 0
@@ -40,17 +33,13 @@ class PitchingGameStats:
     pitches = 0
 
 class Batter:
-    def __init__(self, name, contact, power, speed, vision):
+    def __init__(self, player_id, name, contact, power, speed, vision):
+        self.player_id = player_id
         self.name = name
         self.contact = contact
         self.power = power
         self.speed = speed
         self.vision = vision
-        self.stats = HittingGameStats()
-
-    def __init__(self, player_id, name):
-        self.player_id = player_id
-        self.name = name
         self.stats = HittingGameStats()
 
 class Pitcher:

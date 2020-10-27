@@ -36,19 +36,19 @@ def simAtBat(batter, pitcher):
     # Fly Ball batting average min x, avg .207, max x
     fly_ball_ba = .207
     # Line Drive Hit HR Chance avg .056
-    ld_hr_chance = .056
+    ld_hr_chance = .056 + (batter.power - 70)/600
     # Line Drive Hit 2B chance avg .452
-    ld_2b_chance = .452
+    ld_2b_chance = .452 + (batter.power - 70)/1200 + (batter.speed - 70)/300
     # Line Drive Hit 1B chance avg .492
-    ld_1b_chance = .492
+    ld_1b_chance = .492 - (batter.power - 70)/400 - (batter.speed - 70)/300
     # Fly Ball HR chance avg .552
-    fb_hr_chance = .552
+    fb_hr_chance = .552 + (batter.power - 70)/600
     # Fly Ball 3B chance avg .069
-    fb_3b_chance = .069
+    fb_3b_chance = .069 + (batter.speed - 70)/600
     # Fly Ball 2B chance avg .207
-    fb_2b_chance = .207
+    fb_2b_chance = .207 + (batter.power - 70)/1200 - (batter.speed - 70)/1200
     # Fly Ball 1B chance avg .172
-    fb_1b_chance = .172
+    fb_1b_chance = .172 - (batter.power - 70)/400 - (batter.speed - 70)/1200
     # .10516
     # .14385, .008 HR, .065 2B
     # .07245, .04 HR, .015 2B, .005 3B

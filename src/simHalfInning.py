@@ -64,7 +64,7 @@ def simHalfInning(score, lineup, current_hitter, pitcher):
                     lineup[baserunners[cn.SECOND_BASE]].stats.runs += 1
                 if baserunners[cn.FIRST_BASE] is not None:
                     # 43.3% average chance to score from first
-                    score_chance = 0.433
+                    score_chance = 0.25 + .00708*lineup[baserunners[cn.FIRST_BASE]].speed - .000126*(lineup[baserunners[cn.FIRST_BASE]].speed**2) + .000000887*(lineup[baserunners[cn.FIRST_BASE]].speed**3)
                     if score_chance > random():
                         runs_scored_batter += 1
                         lineup[baserunners[cn.FIRST_BASE]].stats.runs += 1
@@ -80,14 +80,14 @@ def simHalfInning(score, lineup, current_hitter, pitcher):
                     baserunners[cn.THIRD_BASE] = None
                 if baserunners[cn.SECOND_BASE] is not None:
                     # 58.8% average chance to score from second
-                    score_chance = 0.588
+                    score_chance = 0.35 + .00868*lineup[baserunners[cn.SECOND_BASE]].speed - .000141*(lineup[baserunners[cn.SECOND_BASE]].speed**2) + .000000926*(lineup[baserunners[cn.SECOND_BASE]].speed**3)
                     if score_chance > random():
                         runs_scored_batter += 1
                         lineup[baserunners[cn.SECOND_BASE]].stats.runs += 1
                         baserunners[cn.SECOND_BASE] = None
                         if baserunners[cn.FIRST_BASE] is not None:
                             # 70% average chance to advance to third if runner scores from second
-                            advance_to_third_chance = 0.7
+                            advance_to_third_chance = 0.5 + .00763*lineup[baserunners[cn.FIRST_BASE]].speed - .000161*(lineup[baserunners[cn.FIRST_BASE]].speed**2) + .00000131*(lineup[baserunners[cn.FIRST_BASE]].speed**3)
                             if advance_to_third_chance > random():
                                 baserunners[cn.THIRD_BASE] = baserunners[cn.FIRST_BASE]
                             else:
@@ -97,7 +97,7 @@ def simHalfInning(score, lineup, current_hitter, pitcher):
                         baserunners[cn.SECOND_BASE] = baserunners[cn.FIRST_BASE]
                 elif baserunners[cn.FIRST_BASE] is not None:
                     # 21.1% average chance to advance to third with no runner on second
-                    advance_to_third_chance = .211
+                    advance_to_third_chance = 0.05 + .0075*lineup[baserunners[cn.FIRST_BASE]].speed - .000158*(lineup[baserunners[cn.FIRST_BASE]].speed**2) + .00000118*(lineup[baserunners[cn.FIRST_BASE]].speed**3)
                     if advance_to_third_chance > random():
                         baserunners[cn.THIRD_BASE] = baserunners[cn.FIRST_BASE]
                     else:
