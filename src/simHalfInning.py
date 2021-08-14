@@ -18,6 +18,8 @@ def simHalfInning(score, lineup, current_hitter, pitcher):
     runs_scored = 0
     hits = 0
     baserunners = [None, None, None]
+
+    # Half-inning sim loop. Half-inning ends with 3 outs, or the home team hitting a walk-off in the 9th or later
     while outs < 3 and not (score.inning >=9 and (score.home_score + runs_scored) > score.away_score and not score.top):
         runs_scored_batter = 0
         batter = lineup[current_hitter]
@@ -25,6 +27,8 @@ def simHalfInning(score, lineup, current_hitter, pitcher):
         pitch_count += at_bat.pitches
         pitcher.stats.pitches += at_bat.pitches
         if at_bat.out:
+            # Batter is out, add stats and continue to next batter
+            #TODO: add logic to allow runners to advance on flyouts, groundouts, etc
             outs += 1
             pitcher.stats.outs += 1
             lineup[current_hitter].stats.at_bats += 1
@@ -33,11 +37,13 @@ def simHalfInning(score, lineup, current_hitter, pitcher):
                 lineup[current_hitter].stats.strikeouts += 1
             print(batter.name + ": " + str(at_bat.out_type) + ", " + str(outs) + " outs")
         elif at_bat.hit:
+            # Batter got a hit, advance runners appropriately and document stats
             hits += 1
             pitcher.stats.hits += 1
             lineup[current_hitter].stats.hits += 1
             lineup[current_hitter].stats.at_bats += 1
             if at_bat.hit_type == cn.HOME_RUN:
+                # Home run, batter and all baserunners score
                 lineup[current_hitter].stats.runs += 1
                 lineup[current_hitter].stats.home_runs += 1
                 runs_scored_batter += 1
@@ -47,6 +53,8 @@ def simHalfInning(score, lineup, current_hitter, pitcher):
                         lineup[runner].stats.runs += 1
                 baserunners = [None, None, None]
             elif at_bat.hit_type == cn.TRIPLE:
+                # Triple, all baserunners score
+                # Batter to third base
                 lineup[current_hitter].stats.triples += 1
                 for runner in baserunners:
                     if runner is not None:
@@ -54,6 +62,9 @@ def simHalfInning(score, lineup, current_hitter, pitcher):
                         lineup[runner].stats.runs += 1
                 baserunners = [None, None, current_hitter]
             elif at_bat.hit_type == cn.DOUBLE:
+                # Double, runners on second and third score
+                # Runner on first advances to third with a chance of scoring,
+                # Batter to second
                 lineup[current_hitter].stats.doubles += 1
                 if baserunners[cn.THIRD_BASE] is not None:
                     runs_scored_batter += 1
@@ -74,6 +85,10 @@ def simHalfInning(score, lineup, current_hitter, pitcher):
                         baserunners[cn.FIRST_BASE] = None
                 baserunners[cn.SECOND_BASE] = current_hitter
             elif at_bat.hit_type == cn.SINGLE:
+                # Single, runner on third scores
+                # Runner on second to third, with a chance of scoring
+                # Runner on first to second, with a chance of third if base is unoccupied
+                # Batter to first
                 if baserunners[cn.THIRD_BASE] is not None:
                     runs_scored_batter += 1
                     lineup[baserunners[cn.THIRD_BASE]].stats.runs += 1
@@ -95,8 +110,8 @@ def simHalfInning(score, lineup, current_hitter, pitcher):
                     else:
                         baserunners[cn.THIRD_BASE] = baserunners[cn.SECOND_BASE]
                         baserunners[cn.SECOND_BASE] = baserunners[cn.FIRST_BASE]
-                elif baserunners[cn.FIRST_BASE] is not None:
-                    # 21.1% average chance to advance to third with no runner on second
+                if baserunners[cn.FIRST_BASE] is not None and baserunners[cn.THIRD_BASE] = None:
+                    # 21.1% average chance to advance to third if third base is empty
                     advance_to_third_chance = 0.05 + .0075*lineup[baserunners[cn.FIRST_BASE]].speed - .000158*(lineup[baserunners[cn.FIRST_BASE]].speed**2) + .00000118*(lineup[baserunners[cn.FIRST_BASE]].speed**3)
                     if advance_to_third_chance > random():
                         baserunners[cn.THIRD_BASE] = baserunners[cn.FIRST_BASE]
@@ -112,6 +127,7 @@ def simHalfInning(score, lineup, current_hitter, pitcher):
                 baserunner_string += "third "
             print(batter.name + ": " + str(at_bat.hit_type) + ", " + str(runs_scored_batter) + " RBIs. " + baserunner_string)
         elif at_bat.walk:
+            # Batter walked, advance batter to first and any affected baserunners
             lineup[current_hitter].stats.walks += 1
             pitcher.stats.walks += 1
             if baserunners[cn.FIRST_BASE] is not None:

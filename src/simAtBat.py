@@ -23,6 +23,8 @@ def simAtBat(batter, pitcher):
     out_type = None
     hit_type = None
     contact_type = None
+
+    # Set Probablities for type of contact
     # Ground Ball min x, avg .44, max x
     ground_ball_perc = .44
     # Line Drive min x, avg .21, max x
@@ -52,20 +54,26 @@ def simAtBat(batter, pitcher):
     # .10516
     # .14385, .008 HR, .065 2B
     # .07245, .04 HR, .015 2B, .005 3B
+
+    # At-bat simulation loop
     while not outcome:
         pitch = simPitch(batter, pitcher)
         pitches += 1
         if not pitch.swing:
+            # Pitch was taken, add a strike/ball to the count
             if pitch.strike:
                 strikes += 1
             else:
                 balls += 1
         elif not pitch.contact:
+            # Swing and a miss, add a strike
             strikes += 1
         elif pitch.foul:
+            # Foul ball, add a strike, but don't strikeout
             if strikes < 2:
                 strikes += 1
         else:
+            # Ball hit in play, determine outcome
             outcome = True
             contact_choices = [cn.GROUND_BALL, cn.LINE_DRIVE, cn.FLY_BALL]
             contact_chances = [ground_ball_perc, line_drive_perc, fly_ball_perc]
@@ -104,11 +112,13 @@ def simAtBat(batter, pitcher):
                     out_type = cn.FLY_OUT
                     #print("Fly out")
         if strikes == 3:
+            # Strikeout
             outcome = True
             out = True
             out_type = cn.STRIKEOUT
             #print("Strikeout")
-        if balls ==4:
+        if balls == 4:
+            # Walk
             outcome = True
             walk = True
             #print("Walk")

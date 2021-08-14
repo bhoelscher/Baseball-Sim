@@ -8,6 +8,8 @@ class PitchResult:
         self.foul = foul
 
 def simPitch(batter, pitcher):
+    # Set probablities for the pitch based on batter and pitcher stats
+    
     # strike percentage: min 48%, mean 62%, top 69%
     strike_perc = .397 + .00985*pitcher.control - .000163*(pitcher.control**2) + .000000962*(pitcher.control**3)
     # swing percentage at strike: min 53%, mean 65%, max 84%
@@ -34,9 +36,11 @@ def simPitch(batter, pitcher):
     contact = False
     foul = False
     
+    # Determine if pitch was in the strike zone
     seed()
     strike = strike_perc > random()
 
+    # Determine if the batter swung and if they made contact 
     if strike:
         swing = strike_swing_perc > random()
         if swing:
@@ -50,6 +54,7 @@ def simPitch(batter, pitcher):
         else:
             contact = False
 
+    # Determine if the ball was hit in play if contact was made
     if contact:
         foul = foul_perc > random()
 
