@@ -2,6 +2,7 @@ from simAtBat import simAtBat
 from random import random
 import constants as cn
 import time
+from Repository import Repository
 
 class inningResult:
     def __init__(self, runs_scored, pitch_count, hits, next_hitter, lineup, pitcher):
@@ -12,18 +13,19 @@ class inningResult:
         self.lineup = lineup
         self.pitcher = pitcher
 
-def simHalfInning(score, lineup, current_hitter, pitcher):
+def simHalfInning(game_id, score, lineup, current_hitter, pitcher):
     outs = 0
     pitch_count = 0
     runs_scored = 0
     hits = 0
     baserunners = [None, None, None]
+    repository = Repository()
 
     # Half-inning sim loop. Half-inning ends with 3 outs, or the home team hitting a walk-off in the 9th or later
     while outs < 3 and not (score.inning >=9 and (score.home_score + runs_scored) > score.away_score and not score.top):
         runs_scored_batter = 0
         batter = lineup[current_hitter]
-        at_bat = simAtBat(batter, pitcher)
+        at_bat = simAtBat(game_id, batter, pitcher)
         pitch_count += at_bat.pitches
         pitcher.stats.pitches += at_bat.pitches
         if at_bat.out:
@@ -110,7 +112,7 @@ def simHalfInning(score, lineup, current_hitter, pitcher):
                     else:
                         baserunners[cn.THIRD_BASE] = baserunners[cn.SECOND_BASE]
                         baserunners[cn.SECOND_BASE] = baserunners[cn.FIRST_BASE]
-                if baserunners[cn.FIRST_BASE] is not None and baserunners[cn.THIRD_BASE] = None:
+                if baserunners[cn.FIRST_BASE] is not None and baserunners[cn.THIRD_BASE] is None:
                     # 21.1% average chance to advance to third if third base is empty
                     advance_to_third_chance = 0.05 + .0075*lineup[baserunners[cn.FIRST_BASE]].speed - .000158*(lineup[baserunners[cn.FIRST_BASE]].speed**2) + .00000118*(lineup[baserunners[cn.FIRST_BASE]].speed**3)
                     if advance_to_third_chance > random():
@@ -152,6 +154,13 @@ def simHalfInning(score, lineup, current_hitter, pitcher):
         current_hitter += 1
         if current_hitter == len(lineup):
             current_hitter = 0
+        homescore = score.home_score
+        awayscore = score.away_score
+        if score.top:
+            awayscore += runs_scored
+        else:
+            homescore += runs_scored
+        repository.updateAtBat(game_id, outs, baserunners, homescore, awayscore)
         #time.sleep(1)
     print("Inning over, " + str(runs_scored) + " runs scored on " + str(hits) + " hits. " + str(pitch_count) + " pitches thrown")
     result = inningResult(runs_scored, pitch_count, hits, current_hitter, lineup, pitcher)

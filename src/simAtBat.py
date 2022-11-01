@@ -1,6 +1,8 @@
 from simPitch import simPitch, PitchResult
 import numpy as np
 import constants as cn
+import time
+from Repository import Repository
 
 class AtBatResult:
     def __init__(self, out, hit, walk, out_type, hit_type, contact_type, pitches):
@@ -12,7 +14,9 @@ class AtBatResult:
         self.contact_type = contact_type
         self.pitches = pitches
 
-def simAtBat(batter, pitcher):
+def simAtBat(game_id, batter, pitcher):
+    repository = Repository()
+    repository.updateCount(game_id, 0, 0)
     strikes = 0
     balls = 0
     pitches = 0
@@ -122,6 +126,8 @@ def simAtBat(batter, pitcher):
             outcome = True
             walk = True
             #print("Walk")
+        repository.updateCount(game_id, balls, strikes)
+        time.sleep(1)
         #if not outcome:
             #print(str(balls) + "-" + str(strikes))
     result = AtBatResult(out, hit, walk, out_type, hit_type, contact_type, pitches) 

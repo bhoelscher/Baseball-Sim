@@ -1,5 +1,6 @@
 from dbConnection import getConnection
-from simGame import Batter, Team,  Pitcher
+from gameClasses import Batter, Team,  Pitcher
+import constants as cn
 import mysql.connector
 
 class Repository:
@@ -42,6 +43,41 @@ class Repository:
         cursor.close()
         return nextGame
 
+    def startGame(self, gameID):
+        cursor = self.mydb.cursor()
+        updateQuery = "UPDATE baseball_test.schedule SET awayScore = 0, homeScore = 0, innings = 1, top = 1, inProgress = 1, balls = 0, strikes = 0, outs = 0, firstBase = 0, secondBase = 0, thirdBase = 0 WHERE gameID = %s;"
+        cursor.execute(updateQuery, (gameID,))
+        self.mydb.commit()
+        cursor.close()
+
+    def updateCount(self, gameID, balls, strikes):
+        cursor = self.mydb.cursor()
+        updateQuery = "UPDATE baseball_test.schedule SET balls = %s, strikes = %s WHERE gameID = %s;"
+        parameters = (balls, strikes, gameID)
+        cursor.execute(updateQuery, parameters)
+        self.mydb.commit()
+        cursor.close()
+
+    def updateAtBat(self, gameID, outs, baserunners, homescore, awayscore):
+        cursor = self.mydb.cursor()
+        firstBase = baserunners[cn.FIRST_BASE] if baserunners[cn.FIRST_BASE] is not None else 0
+        secondBase = baserunners[cn.SECOND_BASE] if baserunners[cn.SECOND_BASE] is not None else 0
+        thirdBase = baserunners[cn.THIRD_BASE] if baserunners[cn.THIRD_BASE] is not None else 0
+
+        updateQuery = "UPDATE baseball_test.schedule SET outs = %s, awayScore = %s, homeScore = %s, firstBase = %s, secondBase = %s, thirdBase = %s WHERE gameID = %s;"
+        parameters = (outs, awayscore, homescore, firstBase, secondBase, thirdBase, gameID)
+        cursor.execute(updateQuery, parameters)
+        self.mydb.commit()
+        cursor.close()
+
+    def updateInning(self, gameID, inning, top):
+        cursor = self.mydb.cursor()
+        updateQuery = "UPDATE baseball_test.schedule SET innings = %s, top = %s, firstBase = 0, secondBase = 0, thirdBase = 0 WHERE gameID = %s;"
+        parameters = (inning, top, gameID)
+        cursor.execute(updateQuery, parameters)
+        self.mydb.commit()
+        cursor.close()
+
     def logGameResult(self, gameID, awayTeamID, homeTeamID, gameResult):
         cursor = self.mydb.cursor()
         if gameResult.home_score > gameResult.away_score:
@@ -50,7 +86,7 @@ class Repository:
         else:
             winner = awayTeamID
             loser = homeTeamID
-        updateQuery = "UPDATE baseball_test.schedule SET awayScore = %s,homeScore = %s,winningTeamID =%s,losingTeamID = %s,innings = %s WHERE gameID = %s;"
+        updateQuery = "UPDATE baseball_test.schedule SET awayScore = %s,homeScore = %s,winningTeamID =%s,losingTeamID = %s,innings = %s,inProgress = 0 WHERE gameID = %s;"
         parameters = (gameResult.away_score, gameResult.home_score, winner, loser, gameResult.innings, gameID)
         cursor.execute(updateQuery, parameters)
         self.mydb.commit()

@@ -1,4 +1,5 @@
-from simGame import simGame, Pitcher, HittingGameStats, PitchingGameStats
+from gameClasses import Pitcher, HittingGameStats, PitchingGameStats
+from simGame import simGame
 from dbConnection import getConnection
 from Repository import Repository
 import mysql.connector
@@ -21,7 +22,7 @@ def runGame():
     awayTeam.batters = repository.getBatters(awayTeamID)
     homeTeam.batters = repository.getBatters(homeTeamID)
 
-    gameResult = simGame(awayTeam, homeTeam)
+    gameResult = simGame(gameID, awayTeam, homeTeam)
     repository.logGameResult(gameID, awayTeamID, homeTeamID, gameResult)
 
     repository.logHittingStats(gameID, awayTeamID, gameResult.away_team)
